@@ -1,5 +1,7 @@
-const mongoose = require('mongoose');
-const {Schema} = mongoose;
+var mongoose = require('mongoose'), 
+    Schema = mongoose.Schema;
+//const mongoose = require('mongoose');
+//const {Schema} = mongoose;
 const bcrypt = require('bcryptjs');
 
 const userSchema = new Schema({
@@ -7,26 +9,32 @@ const userSchema = new Schema({
     email: { type: String, requied: true},
     password: { type: String, requied: true},
     date: {type: Date, default: Date.now}
+},{
+    methods: {
+        // (1)
+        async encryptPassword(password) {
+            const salt = await bcrypt.genSalt(10);
+            const hash = bcrypt.hash( password, salt);
+            return hash;
+        },
+        // (2)
+        matchPassword(password) {
+            return bcrypt.compare(password, this.password);
+        }
+    }
 });
 
-userSchema.methods.encryptPassword = async function(password) {
-    const salt = await bcrypt.genSalt(10);
-    const hash = bcrypt.hash( password, salt);
-    return hash;
-};
+// (1)
+// userSchema.methods.encryptPassword = async function(password) {
+//     const salt = await bcrypt.genSalt(10);
+//     const hash = bcrypt.hash( password, salt);
+//     return hash;
+// };
 
-// userSchema.methods.findSimilarTypes = function(password) {
-//     return mongoose.model('Animal').find({ type: this.type }, password);
-//   };
+// (2)
+// userSchema.methods.matchPassword = async function(password) {
+//     return await bcrypt.compare(password, this.password);
+// }
 
-// userSchema.method({ encryptPassword: async function(password) {
-//         const salt = await bcrypt.genSalt(10);
-//         const hash = bcrypt.hash(password, salt);
-//         return hash;
-//     }}) 
-
-userSchema.methods.matchPassword = async function(password) {
-    return await bcrypt.compare(password, this.password);
-}
-
+//module.exports = mongoose.model.userSchema || mongoose.model('Users', userSchema);
 module.exports = mongoose.model('Users', userSchema);

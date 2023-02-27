@@ -1,9 +1,16 @@
 const router = require('express').Router();
 const User = require('../models/User');
+const passport = require('passport');
 
 router.get('/users/signin', (req, res) => {
     res.render("users/signin");
 })
+
+router.post('/users/signin', passport.authenticate('local', {
+    successRedirect: '/notes',
+    failureRedirect: '/users/signin',
+    failureFlash: true
+}))
 
 router.get('/users/signup', (req, res) => {
     res.render("users/signup");
@@ -17,6 +24,10 @@ router.post('/users/signup', async (req, res) => {
     }
     if (!email) {
         errors.push({text: 'Ingrese su e-Mail !'})
+    } else {
+        if (User.findOne({email: email})) {
+            errors.push({text: 'E-mail ya registrado !'})
+        }
     }
     if (!password) {
         errors.push({text: 'Ingrese Contraseña !'});
@@ -33,7 +44,7 @@ router.post('/users/signup', async (req, res) => {
         res.render('users/signup', {errors, name, email, password, passconf});
     } else {
         const newUser = new User({name, email, password});
-        newUser.password = await newUser.encyptPassword(password);
+        newUser.password = await newUser.encryptPassword(password);
         await newUser.save();
         req.flash('success_msg', 'Registro exitoso !');
         res.redirect('/users/signin');
