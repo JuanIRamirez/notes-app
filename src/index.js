@@ -75,6 +75,4 @@ app.use(express.static( path.join(__dirname, 'public')));
 app.listen(app.get('port'), () => {
     console.log('Server on port'.cyan.bold, app.get('port'));
     console.log('Starting at: ', Date.now().toString());
-    //console.log('Layouts: ', path.join(app.get('views'), 'layouts'))
-    //console.log(exphbs.defaultLayout)
 });
