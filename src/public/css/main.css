@@ -11,3 +11,8 @@ body {
 .form-group, .card {
     margin-bottom: 10px;
 }
+
+.logo {
+    width: 50%;
+    border-radius: 25%;
+}

@@ -2,9 +2,10 @@ const mongoose = require('mongoose');
 const {Schema} = mongoose;
 
 const NoteSchema = new Schema({
-    title: {type: String, required: true},
-    description: {type: String, required: true},
-    date: {type: Date, default: Date.now}
+    title: {type: String, Required: true},
+    description: {type: String, Required: true},
+    date: {type: Date, default: Date.now},
+    user: {type: String, Required: true}
 });
 
-module.exports = mongoose.model('notas', NoteSchema);
+module.exports = mongoose.model('Notas', NoteSchema);

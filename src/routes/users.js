@@ -25,7 +25,8 @@ router.post('/users/signup', async (req, res) => {
     if (!email) {
         errors.push({text: 'Ingrese su e-Mail !'})
     } else {
-        if (User.findOne({email: email})) {
+        const user = await User.findOne({email: email});
+        if (user) {
             errors.push({text: 'E-mail ya registrado !'})
         }
     }
@@ -50,5 +51,19 @@ router.post('/users/signup', async (req, res) => {
         res.redirect('/users/signin');
     }
 })
+
+router.get('/users/logout', function(req, res, next){
+    req.logout(function(err) {
+      if (err) { return next(err); }
+      res.redirect('/');
+    });
+  });
+
+// app.post('/logout', function(req, res, next){
+//     req.logout(function(err) {
+//       if (err) { return next(err); }
+//       res.redirect('/');
+//     });
+//   });
 
 module.exports = router;
